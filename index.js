@@ -1,26 +1,10 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-// Connect to MongoDB (users database)
-{/* sync function connectDB() {
-  try {
-    await mongoose.connect(
-      "mongodb+srv://yassinamri156:Yassinamri123456@helmokhekcluster.qiq4s.mongodb.net/users?retryWrites=true&w=majority&appName=HelMokhekCluster",
-      "mongodb+srv://yassinamri156:Yassinamri123456@helmokhekcluster.qiq4s.mongodb.net/orders?retryWrites=true&w=majority&appName=HelMokhekCluster"
-
-    );
-    console.log("Connected to users database");
-  } catch (err) {
-    console.log("Failed to connect to users database", err);
-  }
-}
-
-connectDB();
 
 // Define User schema and model (for signup)
 const userSchema = new mongoose.Schema({
@@ -43,10 +27,10 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-const User = mongoose.model('User', userSchema, 'user');
+const User = mongoose.model("users", userSchema);
 
 // Sign-up route to save user to MongoDB
-app.post('/signup', (req, res) => {
+app.post("/signup", (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 
   const newUser = new User({
@@ -56,19 +40,15 @@ app.post('/signup', (req, res) => {
     password,
   });
 
-  newUser.save()
-    .then(user => {
+  newUser
+    .save()
+    .then((user) => {
       res.status(201).json(user);
     })
-    .catch(err => {
-      res.status(500).json({ error: 'Failed to register user' });
+    .catch((err) => {
+      res.status(500).json({ error: "Failed to register user" });
     });
 });
-
-// Connect to the feedback database for messages
-const feedbackDB = mongoose.createConnection(
-  "mongodb+srv://yassinamri156:Yassinamri123456@helmokhekcluster.qiq4s.mongodb.net/feedback?retryWrites=true&w=majority&appName=HelMokhekCluster"
-);
 
 // Define Message Schema
 const messageSchema = new mongoose.Schema({
@@ -82,10 +62,10 @@ const messageSchema = new mongoose.Schema({
   },
 });
 
-const Message = feedbackDB.model('Message', messageSchema, 'msg');
+const Message = mongoose.model("messages", messageSchema);
 
 // POST route to save messages to MongoDB
-app.post('/api/messages', (req, res) => {
+app.post("/api/messages", (req, res) => {
   const { email, content } = req.body;
 
   const newMessage = new Message({
@@ -93,26 +73,15 @@ app.post('/api/messages', (req, res) => {
     content,
   });
 
-  newMessage.save()
-    .then(message => {
+  newMessage
+    .save()
+    .then((message) => {
       res.status(201).json(message);
     })
-    .catch(err => {
-      res.status(500).json({ error: 'Failed to save message' });
+    .catch((err) => {
+      res.status(500).json({ error: "Failed to save message" });
     });
 });
-
-async function connectDB() {
-  try {
-    await mongoose.connect(
-    );
-    console.log("Connected to orders database");
-  } catch (err) {
-    console.log("Failed to connect to orders database", err);
-  }
-}
-
-connectDB();
 
 // Define Order schema and model
 const orderSchema = new mongoose.Schema({
@@ -158,11 +127,22 @@ const orderSchema = new mongoose.Schema({
   },
 });
 
-const Order = mongoose.model('Order', orderSchema, 'order');
+const Order = mongoose.model("orders", orderSchema);
 
 // POST route to save orders to MongoDB
-app.post('/api/orders', (req, res) => {
-  const { fullName, email, phoneNumber, streetAddress, city, zipCode, deliveryOption, cardNumber, expiryDate, cvv } = req.body;
+app.post("/api/orders", (req, res) => {
+  const {
+    fullName,
+    email,
+    phoneNumber,
+    streetAddress,
+    city,
+    zipCode,
+    deliveryOption,
+    cardNumber,
+    expiryDate,
+    cvv,
+  } = req.body;
 
   const newOrder = new Order({
     fullName,
@@ -177,29 +157,16 @@ app.post('/api/orders', (req, res) => {
     cvv,
   });
 
-  newOrder.save()
-    .then(order => {
+  newOrder
+    .save()
+    .then((order) => {
       res.status(201).json(order);
     })
-    .catch(err => {
-      res.status(500).json({ error: 'Failed to save order' });
+    .catch((err) => {
+      res.status(500).json({ error: "Failed to save order" });
     });
-});*/}
+});
 
-
-// Connect to the wishlists database
-async function connectWishlistDB() {
-  try {
-    await mongoose.connect(
-      "mongodb+srv://yassinamri156:Yassinamri123456@helmokhekcluster.qiq4s.mongodb.net/wishlists?retryWrites=true&w=majority&appName=HelMokhekCluster"
-    );
-    console.log("Connected to wishlists database");
-  } catch (err) {
-    console.log("Failed to connect to wishlists database", err);
-  }
-}
-
-connectWishlistDB();
 // Define Wishlist schema and model
 const wishlistSchema = new mongoose.Schema({
   img: { type: String, required: true },
@@ -207,26 +174,36 @@ const wishlistSchema = new mongoose.Schema({
   price: { type: String, required: true },
 });
 
-const Wishlist = mongoose.model('Wishlist', wishlistSchema);
+const Wishlist = mongoose.model("Wishlist", wishlistSchema);
 
 // POST route to save wishlist item to MongoDB
-app.post('/api/wishlist', async (req, res) => {
-
+app.post("/api/wishlist", async (req, res) => {
   const { img, desc, price } = req.body;
 
   const newWishlistItem = new Wishlist({ img, desc, price });
-  console.log(newWishlistItem)
-  
+
   try {
     const item = await newWishlistItem.save();
     res.status(201).json(item);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ error: 'Failed to save wishlist item' });
+    console.log(err);
+    res.status(500).json({ error: "Failed to save wishlist item" });
   }
 });
 
+async function connectDB() {
+  try {
+    await mongoose.connect(
+      "mongodb+srv://yassinamri156:Yassinamri123456@helmokhekcluster.qiq4s.mongodb.net/?retryWrites=true&w=majority&appName=HelMokhekCluster"
+    );
+    console.log("Connected to users database");
+  } catch (err) {
+    console.log("Failed to connect to users database", err);
+  }
+}
 
+// connect to db
+connectDB();
 
 // Start the server
 const port = 8080;
